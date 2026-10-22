@@ -1,0 +1,534 @@
+openapi: 3.0.3
+
+info:
+  title: Spyglass API
+  version: 0.1.0
+  description: |
+    Spyglass помогает администраторам Minecraft-проектов проверять логи игроков:
+    сервис разбирает `.log` файл, выделяет список модов и ресурспаков
+    и хранит историю проверок.
+
+    Этап 1: загрузчик Fabric. Этап 2: Fabric и NeoForge.
+
+tags:
+  - name: System
+    description: Служебные эндпоинты
+  - name: Auth
+    description: Регистрация и вход
+  - name: Users
+    description: Профиль текущего пользователя
+  - name: Logs
+    description: Загрузка, разбор и история логов
+
+paths:
+  # ---------- System ----------
+  /health:
+    get:
+      tags: [System]
+      operationId: getHealth
+      summary: Проверка живости сервиса
+      description: Нужен для docker compose healthcheck и Kubernetes probes.
+      responses:
+        "200":
+          description: Сервис работает
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  # ---------- Auth ----------
+  # В пути есть /api/v1 - версия API. Если когда-нибудь контракт придётся ломать,
+  # появится /api/v2, а старые клиенты продолжат работать.
+  /api/v1/auth/register:
+    post:
+      tags: [Auth]
+      operationId: register
+      summary: Регистрация нового пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: Пользователь создан
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          description: Имя пользователя или email уже заняты
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/v1/auth/login:
+    post:
+      tags: [Auth]
+      operationId: login
+      summary: Вход и получение JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Успешный вход
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  # ---------- Users ----------
+  # "me" - текущий пользователь, которого сервер определяет по токену.
+  # Так не нужно передавать id в пути, и нельзя случайно открыть чужой профиль.
+  /api/v1/users/me:
+    get:
+      tags: [Users]
+      operationId: getProfile
+      summary: Получить свой профиль
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Профиль
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    patch:
+      tags: [Users]
+      operationId: updateProfile
+      summary: Изменить свой профиль
+      description: |
+        PATCH меняет только переданные поля, остальные остаются как были
+        (в отличие от PUT, который заменяет объект целиком).
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProfileRequest"
+      responses:
+        "200":
+          description: Обновлённый профиль
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          description: Имя пользователя или email уже заняты
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      tags: [Users]
+      operationId: deleteProfile
+      summary: Удалить свой аккаунт
+      description: Вместе с аккаунтом удаляется вся история логов пользователя.
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Аккаунт удалён
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  # ---------- Logs ----------
+  # Коллекция называется во множественном числе (/logs), а конкретный элемент - /logs/{id}.
+  # Для "моих логов" отдельный путь не нужен: пользователя сервер знает по токену.
+  /api/v1/logs:
+    post:
+      tags: [Logs]
+      operationId: uploadLog
+      summary: Загрузить и разобрать лог
+      description: |
+        Принимает `.log` файл, определяет загрузчик, извлекает моды и ресурспаки,
+        сохраняет результат в историю и возвращает отчёт.
+        Идентификатор создаёт сервер, поэтому в пути его нет.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          # Файлы отправляются как multipart/form-data, а не как JSON
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Файл `.log` (latest.log и т.п.)
+                player:
+                  type: string
+                  maxLength: 64
+                  description: Ник игрока, чей это лог (чтобы потом искать по истории)
+                  example: Steve
+                loader:
+                  $ref: "#/components/schemas/Loader"
+      responses:
+        "201":
+          description: Лог разобран и сохранён
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogReport"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "413":
+          description: Файл слишком большой
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Не удалось распознать загрузчик или формат лога
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    get:
+      tags: [Logs]
+      operationId: listLogs
+      summary: История моих логов
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Номер страницы, начиная с 0
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: size
+          in: query
+          description: Сколько записей на странице
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: player
+          in: query
+          description: Фильтр по нику игрока
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Страница истории
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogPage"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/v1/logs/{id}:
+    # parameters на уровне пути действуют для всех методов внутри (get и delete)
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Logs]
+      operationId: getLog
+      summary: Полный отчёт по логу
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Отчёт
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogReport"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [Logs]
+      operationId: deleteLog
+      summary: Удалить лог из истории
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Удалено
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+components:
+  # Схема авторизации: токен JWT в заголовке "Authorization: Bearer <токен>".
+  # Каждый защищённый эндпоинт выше указывает её через security.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  # Повторяющиеся ответы с ошибками описаны один раз
+  responses:
+    BadRequest:
+      description: Некорректный запрос
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Unauthorized:
+      description: Нет токена или он недействителен
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: Ресурс не найден (или принадлежит другому пользователю)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  schemas:
+    HealthResponse:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          example: ok
+
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          description: Машиночитаемый код ошибки
+          example: validation_error
+        message:
+          type: string
+          description: Описание для человека
+          example: Поле username не может быть пустым
+
+    RegisterRequest:
+      type: object
+      required: [username, email, password]
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 32
+          example: admin_steve
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          minLength: 8
+          maxLength: 128
+
+    LoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+
+    TokenResponse:
+      type: object
+      required: [accessToken, tokenType, expiresIn]
+      properties:
+        accessToken:
+          type: string
+        tokenType:
+          type: string
+          example: Bearer
+        expiresIn:
+          type: integer
+          format: int64
+          description: Время жизни токена в секундах
+          example: 3600
+
+    UserResponse:
+      type: object
+      required: [id, username, email, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        createdAt:
+          type: string
+          format: date-time
+
+    # Ни одно поле не required: для PATCH можно прислать любое подмножество
+    UpdateProfileRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 32
+        email:
+          type: string
+          format: email
+
+    Loader:
+      type: string
+      enum: [FABRIC, NEOFORGE]
+      description: Загрузчик модов. Если не указан при загрузке, определяется автоматически.
+
+    ModEntry:
+      type: object
+      required: [id, version]
+      properties:
+        id:
+          type: string
+          description: Идентификатор мода
+          example: sodium
+        name:
+          type: string
+          nullable: true
+          example: Sodium
+        version:
+          type: string
+          example: 0.6.13+mc1.21.1
+
+    ResourcePackEntry:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          example: Faithful 32x
+
+    # Задел на этап 2 (проверка лога на подделку). Пока всегда NOT_CHECKED.
+    IntegrityStatus:
+      type: string
+      enum: [NOT_CHECKED, OK, SUSPICIOUS]
+
+    IntegrityIssue:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          example: mod_count_mismatch
+        message:
+          type: string
+          example: Заявленное число модов (84) не совпадает с найденным (79)
+
+    IntegrityReport:
+      type: object
+      required: [status, issues]
+      properties:
+        status:
+          $ref: "#/components/schemas/IntegrityStatus"
+        issues:
+          type: array
+          items:
+            $ref: "#/components/schemas/IntegrityIssue"
+
+    # Краткая запись для списка истории
+    LogSummary:
+      type: object
+      required: [id, fileName, loader, modCount, resourcePackCount, integrityStatus, uploadedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        fileName:
+          type: string
+          example: latest.log
+        player:
+          type: string
+          nullable: true
+          example: Steve
+        loader:
+          $ref: "#/components/schemas/Loader"
+        minecraftVersion:
+          type: string
+          nullable: true
+          example: 1.21.1
+        modCount:
+          type: integer
+        resourcePackCount:
+          type: integer
+        integrityStatus:
+          $ref: "#/components/schemas/IntegrityStatus"
+        uploadedAt:
+          type: string
+          format: date-time
+
+    # Полный отчёт = LogSummary + списки. allOf склеивает схемы,
+    # чтобы поля краткой записи не копировать.
+    LogReport:
+      allOf:
+        - $ref: "#/components/schemas/LogSummary"
+        - type: object
+          required: [mods, resourcePacks, integrity]
+          properties:
+            mods:
+              type: array
+              items:
+                $ref: "#/components/schemas/ModEntry"
+            resourcePacks:
+              type: array
+              items:
+                $ref: "#/components/schemas/ResourcePackEntry"
+            integrity:
+              $ref: "#/components/schemas/IntegrityReport"
+
+    LogPage:
+      type: object
+      required: [items, page, size, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/LogSummary"
+        page:
+          type: integer
+        size:
+          type: integer
+        total:
+          type: integer
+          format: int64
+          description: Всего записей по этому фильтру
