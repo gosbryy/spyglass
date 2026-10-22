@@ -1,0 +1,7 @@
+ktor:
+  deployment:
+    port: 8080
+  application:
+    modules:
+      - gosbry.SerializationKt.configureSerialization
+      - gosbry.RoutingKt.configureRouting
