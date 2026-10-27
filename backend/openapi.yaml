@@ -439,7 +439,7 @@ components:
           type: string
           example: Faithful 32x
 
-    # Задел на этап 2 (проверка лога на подделку). Пока всегда NOT_CHECKED.
+    # Проверка лога на подделку. NOT_CHECKED — лоадер пока не поддерживается (NeoForge).
     IntegrityStatus:
       type: string
       enum: [NOT_CHECKED, OK, SUSPICIOUS]

@@ -74,6 +74,17 @@ data class IntegrityReport(
     val issues: List<IntegrityIssue>,
 )
 
+// промежуточная модель после парса
+data class ParsedLog(
+    val player: String?,
+    val loader: Loader,
+    val minecraftVersion: String?,
+    val modCount: Int,
+    val resourcePackCount: Int,
+    val mods: List<ModEntry>,
+    val resourcePacks: List<ResourcePackEntry>,
+)
+
 // краткая запись для списка истории
 @Serializable
 data class LogSummary(
