@@ -22,7 +22,8 @@ fun Application.configureRouting() {
         post("/api/v1/logs") {
             var fileName: String? = null
             var content: String? = null
-            var player: String? = null // TODO: вставлять как значения по-умолчанию или вырезать
+            var player: String? = null
+            // TODO: использовать для выбора парсера, когда появится парсер neoforge
             var loader: String? = null
 
             call.receiveMultipart().forEachPart { part ->
@@ -43,7 +44,8 @@ fun Application.configureRouting() {
             val text = content ?: return@post call.respond(
                 HttpStatusCode.BadRequest, ErrorResponse("FILE_MISSING", "Field 'file' is required"),
             )
-            call.respond(HttpStatusCode.Created, unitLog(fileName ?: "latest.log", text))
+            val defaultPlayer = player?.trim()?.takeIf { it.isNotEmpty() }
+            call.respond(HttpStatusCode.Created, unitLog(fileName ?: "latest.log", text, defaultPlayer))
         }
     }
 }
