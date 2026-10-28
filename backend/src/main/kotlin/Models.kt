@@ -28,7 +28,7 @@ data class LoginRequest(
 data class TokenResponse(
     val accessToken: String,
     val tokenType: String, // всегда Bearer
-    val expiresIn: Long,   // секунды
+    val expiresIn: Long, // секунды
 )
 
 // ответы регистрации, GET /users/me, PATCH /users/me

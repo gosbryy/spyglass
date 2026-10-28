@@ -33,6 +33,5 @@ object FabricLogs {
 
     fun withoutLine(prefix: String) = lines.filterNot { it.startsWith(prefix) }
 
-    fun replacing(prefix: String, replacement: String) =
-        lines.map { if (it.startsWith(prefix)) replacement else it }
+    fun replacing(prefix: String, replacement: String) = lines.map { if (it.startsWith(prefix)) replacement else it }
 }

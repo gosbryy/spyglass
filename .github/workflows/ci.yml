@@ -11,6 +11,11 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# все run-шаги выполняются в backend/, где лежит самостоятельная Gradle-сборка
+defaults:
+  run:
+    working-directory: backend
+
 jobs:
   backend-test:
     runs-on: ubuntu-latest
@@ -24,4 +29,19 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      - run: ./gradlew :backend:test
+      - run: ./gradlew test
+
+  # отдельной задачей: стиль и тесты проверяются параллельно и падают независимо
+  backend-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - run: ./gradlew ktlintCheck

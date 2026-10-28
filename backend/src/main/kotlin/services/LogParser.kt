@@ -2,8 +2,8 @@ package gosbry.services
 
 import gosbry.Loader
 import gosbry.ModEntry
-import gosbry.ResourcePackEntry
 import gosbry.ParsedLog
+import gosbry.ResourcePackEntry
 
 // [18:31:15] [main/INFO]: Loading Minecraft 26.1.2 with Fabric Loader 0.19.3
 private val FABRIC_HEADER = Regex("""Loading Minecraft (\S+) with Fabric Loader (\S+)""")

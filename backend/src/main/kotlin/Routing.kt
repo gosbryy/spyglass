@@ -32,8 +32,14 @@ fun Application.configureRouting() {
                             fileName = part.originalFileName
                             content = part.provider().readBuffer().readText()
                         }
-                        part is PartData.FormItem && part.name == "player" -> { player = part.value }
-                        part is PartData.FormItem && part.name == "loader" -> { loader = part.value }
+
+                        part is PartData.FormItem && part.name == "player" -> {
+                            player = part.value
+                        }
+
+                        part is PartData.FormItem && part.name == "loader" -> {
+                            loader = part.value
+                        }
                     }
                 } finally {
                     part.release()
@@ -41,7 +47,8 @@ fun Application.configureRouting() {
             }
 
             val text = content ?: return@post call.respond(
-                HttpStatusCode.BadRequest, ErrorResponse("FILE_MISSING", "Field 'file' is required"),
+                HttpStatusCode.BadRequest,
+                ErrorResponse("FILE_MISSING", "Field 'file' is required"),
             )
             val defaultPlayer = player?.trim()?.takeIf { it.isNotEmpty() }
             call.respond(HttpStatusCode.Created, unitLog(fileName ?: "latest.log", text, defaultPlayer))

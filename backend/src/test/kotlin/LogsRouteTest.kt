@@ -23,9 +23,13 @@ class LogsRouteTest {
         formData = formData {
             if (content != null) {
                 val disposition = if (fileName != null) "filename=\"$fileName\"" else ""
-                append("file", content.toByteArray(), Headers.build {
-                    append(HttpHeaders.ContentDisposition, disposition)
-                })
+                append(
+                    "file",
+                    content.toByteArray(),
+                    Headers.build {
+                        append(HttpHeaders.ContentDisposition, disposition)
+                    },
+                )
             }
             if (player != null) append("player", player)
         },
@@ -69,7 +73,8 @@ class LogsRouteTest {
         val response = client.uploadLog(RealLogs.fabricTampered)
 
         assertEquals(HttpStatusCode.Created, response.status)
-        assertEquals(IntegrityStatus.SUSPICIOUS, Json.decodeFromString<LogReport>(response.bodyAsText()).integrityStatus)
+        val report = Json.decodeFromString<LogReport>(response.bodyAsText())
+        assertEquals(IntegrityStatus.SUSPICIOUS, report.integrityStatus)
     }
 
     // без filename ktor считает часть обычным полем формы, а не файлом

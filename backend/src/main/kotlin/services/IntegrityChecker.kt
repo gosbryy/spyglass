@@ -22,11 +22,10 @@ private val BUILTIN_PACKS = setOf("vanilla", "fabric", "programmer_art", "high_c
 // больший откат времени считаем переходом через полночь
 private const val MAX_BACKWARD_SECONDS = 12 * 60 * 60
 
-
-
 fun check(parsed: ParsedLog, content: String): IntegrityReport {
     val issues = when (parsed.loader) {
         Loader.FABRIC -> checkFabric(content)
+
         // проверок для neoforge пока нет
         Loader.NEOFORGE -> return IntegrityReport(IntegrityStatus.NOT_CHECKED, emptyList())
     }
@@ -44,7 +43,7 @@ private fun checkFabric(content: String): List<IntegrityIssue> {
         checkResourcePacks(lines, modIds),
         checkLineEndings(rawLines),
         checkTimestamps(lines),
-        )
+    )
 }
 
 private fun allModIds(lines: List<String>): Set<String> {
@@ -56,7 +55,7 @@ private fun allModIds(lines: List<String>): Set<String> {
         .takeWhile { it.startsWith("\t") }
         .mapNotNull { ANY_MOD.matchEntire(it)?.groupValues?.get(1) }
         .toSet()
-    }
+}
 
 // лоадер пишет число уникальных модов, включая вложенные; удалённая из списка строка его не меняет
 private fun checkModCount(lines: List<String>, modIds: Set<String>): IntegrityIssue? {
@@ -68,8 +67,8 @@ private fun checkModCount(lines: List<String>, modIds: Set<String>): IntegrityIs
     return IntegrityIssue(
         "MOD_COUNT_MISMATCH",
         "Header declares $declared mods, but the list contains ${modIds.size}",
-        )
-    }
+    )
+}
 
 // моды с ресурсами попадают в ResourceManager под своим id: пак без мода значит, что мод вырезали из списка;
 // file/ — пользовательские паки, server/ — пак, присланный сервером
@@ -87,12 +86,13 @@ private fun checkResourcePacks(lines: List<String>, modIds: Set<String>): Integr
     return IntegrityIssue(
         "UNKNOWN_MOD_RESOURCES",
         "Resources loaded for mods missing from the mod list: ${orphans.joinToString()}",
-        )
-    }
+    )
+}
 
 // "continuity:default" и "axiom_translations" — паки, которые добавляет сам мод
 private fun isProvidedByMod(pack: String, modIds: Set<String>): Boolean =
     pack in modIds || pack.substringBefore(':') in modIds || pack.substringBefore('_') in modIds
+
 // на Windows игра пишет записи с CRLF, а переносы внутри многострочных записей остаются LF;
 // сплошной CRLF значит, что файл пересохранили в редакторе
 private fun checkLineEndings(rawLines: List<String>): IntegrityIssue? {
@@ -106,8 +106,8 @@ private fun checkLineEndings(rawLines: List<String>): IntegrityIssue? {
     return IntegrityIssue(
         "LINE_ENDINGS_NORMALIZED",
         "All lines end with CRLF, including continuation lines; the file was likely re-saved in an editor",
-        )
-    }
+    )
+}
 
 private fun checkTimestamps(lines: List<String>): IntegrityIssue? {
     var previous: Int? = null
@@ -119,7 +119,7 @@ private fun checkTimestamps(lines: List<String>): IntegrityIssue? {
             return IntegrityIssue(
                 "TIMESTAMP_ORDER",
                 "Timestamp goes backwards at line ${index + 1}",
-                )
+            )
         }
         previous = current
     }

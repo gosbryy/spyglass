@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(ktorLibs.plugins.ktor)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ktlint)
 }
 
 group = "gosbry"
@@ -14,6 +15,10 @@ application {
 
 kotlin {
     jvmToolchain(21)
+}
+
+ktlint {
+    version = libs.versions.ktlint.engine.get()
 }
 dependencies {
     implementation(ktorLibs.serialization.kotlinx.json)

@@ -17,7 +17,4 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "spyglass"
-
-include(":backend")
-
+rootProject.name = "spyglass-backend"

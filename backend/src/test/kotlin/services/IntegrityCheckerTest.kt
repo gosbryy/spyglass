@@ -9,8 +9,7 @@ import kotlin.test.*
 
 class IntegrityCheckerTest {
 
-    private fun checkContent(content: String): IntegrityReport =
-        check(parseFabricLog("latest.log", content), content)
+    private fun checkContent(content: String): IntegrityReport = check(parseFabricLog("latest.log", content), content)
 
     private fun IntegrityReport.codes() = issues.map { it.code }
 
