@@ -1,0 +1,150 @@
+[17:31:30] [main/INFO]: Loaded configuration file for Sodium: 35 options available, 1 override(s) found
+[17:31:38] [main/WARN]: Force-disabling mixin 'features.render.world.sky.LevelRendererMixin' as rule 'mixin.features.render.world.sky' (added by mods [iris]) disables it and children
+[17:32:07] [main/INFO]: Completely ignored arguments: [--userProperties, {}, --ichorExternalFiles, kill-sound-chat-patterns.json,user-message-patterns.json,tier-tagger.json,waypoint-patterns.json,vanilla_capes.json,hypixel/quickplay.json,hypixel/teamview.json,hypixel/bedwars.json,hypixel/skyblock/splits.json,hypixel/skyblock/item-shop-prices.json,hypixel/skyblock/chocolate-factory-prices.json,hypixel/skyblock/mineshaft-corpse-waypoints.json,hypixel/skyblock/metal-detector-locations.json,hypixel/skyblock/hoppity-eggs.json,hypixel/skyblock/enchants.json,hypixel/skyblock/vendor-items.json,hypixel/skyblock/glacite-tunnels.json,hypixel/skyblock/kuudra-waypoints.json,hypixel/skyblock/skill-xp.json,hypixel/skyblock/important-npc-locations.json,hypixel/skyblock/middle-click.json,hypixel/skyblock/adblock-websites.json,hypixel/skyblock/modern-islands.json,hypixel/skyblock/autocomplete-warps.json,hypixel/skyblock/tab-widgets.json,hypixel/skyblock/garden.json,hypixel/skyblock/important-items.json,hypixel/skyblock/commands.json,hypixel/skyblock/item-abilities.json,hypixel/skyblock/max-levels.json,hypixel/skyblock/sphinx-key.json,hypixel/skyblock/stacking-enchants.json,hypixel/skyblock/dungeon/rooms.json,hypixel/skyblock/dungeon/waterboard-solutions.json,hypixel/skyblock/dungeon/routes.json,hypixel/skyblock/dungeon/trash-items.json,hypixel/skyblock/dungeon/quiz-key.json, --ichorClassPath, common-0.1.0-SNAPSHOT-all-nomappings.jar,lunar-platform-mappings-v1_21_11.jar,lunar-fabric-mixins-0.1.0-SNAPSHOT-all.jar,lunar-flashback-mixins-0.1.0-SNAPSHOT-all.jar,lunar-modmenu-mixins-0.1.0-SNAPSHOT-all.jar,lunar-replaymod-fabric-mixins-0.1.0-SNAPSHOT-all.jar,lunar-skyhanni-mixins-0.1.0-SNAPSHOT-all.jar,lunar-sodium-mixins-0.1.0-SNAPSHOT-all.jar,genesis-0.1.0-SNAPSHOT-all.jar,lunar-lang.jar,lunar.jar,modern-0.1.0-SNAPSHOT-all-nomappings.jar, --workingDirectory, ., --classpathDir, .]
+[17:32:08] [Render thread/INFO]: Setting user: LunarPlayer
+[17:32:08] [Render thread/INFO]: [STDOUT]: [17:32:08] [IchorPipeline/Render thread/INFO] Launching main ModInitializer
+[17:32:08] [Render thread/INFO]: [STDOUT]: [17:32:08] [IchorPipeline/Render thread/INFO] Launching Entrypoint(main) in Genesis
+[17:32:08] [Render thread/INFO]: [STDOUT]: [17:32:08] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.lookup.ApiLookupImpl
+[17:32:08] [Render thread/INFO]: [STDOUT]: [17:32:08] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.tag.convention.ConventionLogWarnings
+[17:32:08] [Render thread/INFO]: [STDOUT]: [17:32:08] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.tag.convention.v2.TranslationConventionLogWarnings
+[17:32:08] [Render thread/INFO]: [STDOUT]: [17:32:08] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.attachment.AttachmentEntrypoint
+[17:32:08] [Render thread/INFO]: [STDOUT]: [17:32:08] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.attachment.sync.AttachmentSync
+[17:32:08] [Render thread/INFO]: [STDOUT]: [17:32:08] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.event.interaction.InteractionEventsRouter
+[17:32:08] [Render thread/INFO]: [STDOUT]: [17:32:08] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.event.lifecycle.LifecycleEventsImpl
+[17:32:08] [Render thread/INFO]: [STDOUT]: [17:32:08] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.loot.v2.LootInitializer
+[17:32:08] [Render thread/INFO]: [STDOUT]: [17:32:08] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.networking.CommonPacketsImpl::init()
+[17:32:08] [Render thread/INFO]: [STDOUT]: [17:32:08] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.networking.NetworkingImpl::init()
+[17:32:08] [Render thread/INFO]: [STDOUT]: [17:32:08] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.particle.ExtendedBlockStateParticleEffectSync
+[17:32:08] [Render thread/INFO]: [STDOUT]: [17:32:08] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.recipe.ingredient.CustomIngredientInit
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.recipe.ingredient.CustomIngredientSync
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.recipe.sync.RecipeSyncImpl
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.registry.sync.FabricRegistryInit
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.resource.conditions.ResourceConditionsImpl
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.screenhandler.Networking
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(main) net.fabricmc.fabric.impl.tag.TagInit
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(main) snownee.jade.util.CommonProxy
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(main) mezz.jei.fabric.JustEnoughItems
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(main) io.wispforest.owo.Owo
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(main) su.plo.voice.ModVoice
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [IchorPipeline/Render thread/INFO] Entrypoint(main) had 20 invokes.
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [IchorPipeline/Render thread/INFO] Launching client ClientModInitializer
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [IchorPipeline/Render thread/INFO] Launching Entrypoint(client) in Genesis
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(client) net.fabricmc.fabric.impl.attachment.client.AttachmentSyncClient
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(client) net.fabricmc.fabric.impl.client.event.lifecycle.ClientLifecycleEventsImpl
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(client) net.fabricmc.fabric.impl.client.model.loading.CustomUnbakedBlockStateModelInit
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(client) net.fabricmc.fabric.impl.networking.client.ClientNetworkingImpl::clientInit()
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(client) net.fabricmc.fabric.impl.client.particle.ExtendedBlockStateParticleEffectSyncClient
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(client) net.fabricmc.fabric.impl.recipe.ingredient.client.CustomIngredientSyncClient
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(client) net.fabricmc.fabric.impl.recipe.sync.client.RecipeSyncImplClient
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(client) net.fabricmc.fabric.impl.client.registry.sync.FabricRegistryClientInit
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(client) net.fabricmc.fabric.impl.renderer.DebugHudClient
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(client) net.fabricmc.fabric.impl.client.indigo.Indigo
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(client) net.fabricmc.fabric.impl.client.rendering.hud.HudStatusBarHeightRegistryImpl
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(client) net.fabricmc.fabric.impl.screenhandler.client.ClientNetworking
+[17:32:09] [Render thread/INFO]: [STDOUT]: [17:32:09] [Ichor/Render thread/INFO] Found Entrypoint(client) snownee.jade.util.ClientProxy
+[17:32:10] [Render thread/INFO]: [STDOUT]: [17:32:10] [Ichor/Render thread/INFO] Found Entrypoint(client) mezz.jei.fabric.JustEnoughItemsClient
+[17:32:10] [Render thread/INFO]: Sending ConfigManager...
+[17:32:10] [Render thread/INFO]: Sending ConfigManager took 4.007 milliseconds
+[17:32:10] [Render thread/INFO]: [STDOUT]: [17:32:10] [Ichor/Render thread/INFO] Found Entrypoint(client) eu.midnightdust.core.MidnightLib
+[17:32:10] [Render thread/INFO]: [STDOUT]: [17:32:10] [Ichor/Render thread/INFO] Found Entrypoint(client) com.terraformersmc.modmenu.ModMenu
+[17:32:10] [Render thread/INFO]: [STDOUT]: [17:32:10] [Ichor/Render thread/INFO] Found Entrypoint(client) io.wispforest.owo.client.OwoClient
+[17:32:11] [Render thread/INFO]: [STDOUT]: [17:32:11] [Ichor/Render thread/INFO] Found Entrypoint(client) su.plo.voice.client.ModVoiceClient
+[17:32:12] [Render thread/INFO]: [STDOUT]: [17:32:12] [Ichor/Render thread/INFO] Found Entrypoint(client) net.caffeinemc.mods.sodium.fabric.SodiumFabricMod
+[17:32:12] [Render thread/INFO]: [STDOUT]: [17:32:12] [Ichor/Render thread/INFO] Found Entrypoint(client) xaero.lib.XaeroLibFabric
+[17:32:12] [Render thread/INFO]: Registering common data for channel xaerolib:main!
+[17:32:12] [Render thread/INFO]: Registering client data for channel xaerolib:main!
+[17:32:12] [Render thread/INFO]: Loading primary common config for channel xaerolib:main!
+[17:32:12] [Render thread/INFO]: Loading server config profiles for channel xaerolib:main!
+[17:32:12] [Render thread/INFO]: Loading primary client config for channel xaerolib:main!
+[17:32:12] [Render thread/INFO]: Loading client config profiles for channel xaerolib:main!
+[17:32:12] [Render thread/INFO]: Loading XaeroLib common 1/2!
+[17:32:12] [Render thread/INFO]: Loading XaeroLib client 1/2!
+[17:32:14] [Render thread/INFO]: [STDOUT]: [17:32:14] [Ichor/Render thread/INFO] Found Entrypoint(client) xaero.minimap.XaeroMinimapFabric
+[17:32:14] [Render thread/INFO]: Registering common data for channel xaerominimap:main!
+[17:32:14] [Render thread/INFO]: Registering client data for channel xaerominimap:main!
+[17:32:14] [Render thread/INFO]: Loading primary common config for channel xaerominimap:main!
+[17:32:14] [Render thread/INFO]: Loading server config profiles for channel xaerominimap:main!
+[17:32:14] [Render thread/INFO]: Loading primary client config for channel xaerominimap:main!
+[17:32:14] [Render thread/INFO]: Loading client config profiles for channel xaerominimap:main!
+[17:32:14] [Render thread/INFO]: Loading Xaero's Minimap - Stage 1/2
+[17:32:14] [Render thread/INFO]: [STDOUT]: [17:32:14] [Ichor/Render thread/INFO] Found Entrypoint(client) xaero.map.WorldMapFabric
+[17:32:14] [Render thread/INFO]: Registering common data for channel xaeroworldmap:main!
+[17:32:14] [Render thread/INFO]: Registering client data for channel xaeroworldmap:main!
+[17:32:14] [Render thread/INFO]: Loading primary common config for channel xaeroworldmap:main!
+[17:32:14] [Render thread/INFO]: Loading server config profiles for channel xaeroworldmap:main!
+[17:32:14] [Render thread/INFO]: Loading primary client config for channel xaeroworldmap:main!
+[17:32:14] [Render thread/INFO]: Loading client config profiles for channel xaeroworldmap:main!
+[17:32:14] [Render thread/INFO]: Loading Xaero's World Map - Stage 1/2
+[17:32:14] [Render thread/INFO]: [STDOUT]: [17:32:14] [Ichor/Render thread/INFO] Found Entrypoint(client) pro.mikey.xray.fabric.XRayFabric
+[17:32:14] [Render thread/INFO]: [STDOUT]: [17:32:14] [IchorPipeline/Render thread/INFO] Entrypoint(client) had 22 invokes.
+[17:32:15] [Render thread/INFO]: [LC] Loaded File: Options
+[17:32:15] [Render thread/INFO]: Backend library: LWJGL version 3.3.3-snapshot
+[17:32:16] [Render thread/INFO]: [STDOUT]: LUNARCLIENT_STATUS_INIT
+[17:32:16] [Render thread/INFO]: OpenGL Vendor: NVIDIA Corporation
+[17:32:16] [Render thread/INFO]: OpenGL Renderer: NVIDIA GeForce RTX 4060/PCIe/SSE2
+[17:32:16] [Render thread/INFO]: OpenGL Version: 3.3.0 NVIDIA 591.86
+[17:32:16] [Render thread/INFO]: Using optional rendering extensions: GL_ARB_buffer_storage, GL_KHR_debug, GL_ARB_vertex_attrib_binding, GL_ARB_direct_state_access, GL_EXT_texture_filter_anisotropic
+[17:32:17] [Render thread/ERROR]: Couldn't load file/MandalasGUI+Dakmode_1.21.11_v2.6.zip pack metadata: Pack declares support for version newer than 64, but is missing mandatory fields min_format and max_format
+[17:32:17] [Render thread/ERROR]: Couldn't load file/Totem Da Capoeira v1.3.zip pack metadata: Multi-version packs cannot support minimum version of less than 15, since this will leave versions in range unable to load pack.
+[17:32:18] [Render thread/INFO]: Reloading ResourceManager: lunar, lunar-jit, vanilla, fabric-api, fabric-api-base, fabric-api-lookup-api-v1, fabric-biome-api-v1, fabric-block-api-v1, fabric-block-view-api-v2, fabric-command-api-v2, fabric-content-registries-v0, fabric-convention-tags-v1, fabric-convention-tags-v2, fabric-crash-report-info-v1, fabric-data-attachment-api-v1, fabric-data-generation-api-v1, fabric-dimensions-v1, fabric-entity-events-v1, fabric-events-interaction-v0, fabric-game-rule-api-v1, fabric-item-api-v1, fabric-item-group-api-v1, fabric-key-binding-api-v1, fabric-lifecycle-events-v1, fabric-loot-api-v2, fabric-loot-api-v3, fabric-message-api-v1, fabric-model-loading-api-v1, fabric-networking-api-v1, fabric-object-builder-api-v1, fabric-particles-v1, fabric-recipe-api-v1, fabric-registry-sync-v0, fabric-renderer-api-v1, fabric-renderer-indigo, fabric-rendering-fluids-v1, fabric-rendering-v1, fabric-resource-conditions-api-v1, fabric-resource-loader-v0, fabric-resource-loader-v1, fabric-screen-api-v1, fabric-screen-handler-api-v1, fabric-serialization-api-v1, fabric-sound-api-v1, fabric-tag-api-v1, fabric-transfer-api-v1, fabric-transitive-access-wideners-v1, iris, jade, jei, midnightlib, modmenu, owo, placeholder-api, plasmovoice, sodium, xaerolib, xaerominimap, xaeroworldmap, xray, file/FreshAnimations_v1.10.4.zip, file/Fullbright-UB-1.21 fub-6.0.zip, file/Itsme64's smaller shield and totem.zip, file/LowOnFire v26.1§8.zip, file/MandalasGUI+Dakmode_1.21.11_v2.6.zip, file/SmoothFont_1.21.zip, file/Tiny PVP Swords and Tools.zip, file/Totem Da Capoeira v1.3.zip
+[17:32:20] [Render thread/INFO]: [STDOUT]: [Bridge] Setting Minecraft Client instance to net.minecraft.class_310
+[17:32:20] [Worker-Main-16/INFO]: Found unifont_all_no_pua-17.0.01.hex, loading
+[17:32:20] [Worker-Main-17/INFO]: Found unifont_pua-17.0.01.hex, loading
+[17:32:20] [Worker-Main-14/INFO]: Found unifont_jp_patch-17.0.01.hex, loading
+[17:32:23] [Render thread/INFO]: [LC] Starting Lunar client...
+[17:32:24] [Worker-Main-2/WARN]: Missing block model: minecraft:builtin/entity
+[17:32:25] [Render thread/INFO]: Resizing Dynamic Transforms UBO, capacity limit of 2 reached during a single frame. New capacity will be 4.
+[17:32:25] [Render thread/INFO]: [LC] Loading OHIRIOCIIOOCRHICCRHOOORHROIHRH...
+[17:32:25] [Render thread/INFO]: [LC] Loading IIHIORROOHCIOIIOIHICIIHCRHOICH...
+[17:32:25] [Render thread/INFO]: [LC] Loading IORHORICRHOCROOCORRHHICIICCRII...
+[17:32:25] [Render thread/INFO]: [LC Lang] Couldn't get a valid language so we're setting it to ENGLISH.
+[17:32:25] [Render thread/INFO]: [LC Lang] Language set as ENGLISH (en_US).
+[17:32:25] [Render thread/INFO]: [LC Lang] Language file found: lang/lunar/en_US.
+[17:32:25] [Render thread/INFO]: [LC Lang] Language file found: lang/lunar/en_US.
+[17:32:25] [Render thread/INFO]: [LC] Loading RHRHIICRRIIIROICOIHOCOCOCCHHRC...
+[17:32:26] [Render thread/INFO]: [LC] [MCTiers] Loaded 8 (.com), 8 (.io) fallback modes, 11 icons, 11 colors
+[17:32:26] [Render thread/INFO]: [LC] [SubTiers] Loaded 12 fallback modes, 12 icons, 12 colors
+[17:32:26] [Render thread/INFO]: [LC] [TierTests] Loaded 6 fallback modes, 15 icons, 15 colors, and 10 tier format data
+[17:32:26] [Render thread/INFO]: Found new data pack lunar, loading it automatically
+[17:32:26] [Render thread/INFO]: Found new data pack lunar-jit, loading it automatically
+[17:32:28] [Render thread/INFO]: [LC] Loading HHCHCHCHHIRCCRIIOOOHHRCOCRIRRO...
+[17:32:28] [Render thread/INFO]: [LC] Loading RRHICCHOHCIRRHCIOOORORRIHHOCRO...
+[17:32:28] [Render thread/INFO]: [LC] Loading COHOHHCIIOOHRCOHIICICRHCICIIOO...
+[17:32:28] [Render thread/INFO]: [LC] Loading IIHIORROOHCIOIIOIHICIIHCRHOICH...
+[17:32:28] [Render thread/INFO]: [LC] Loading OCCOIOCCIOOCIOHOOHOICHRRHOICHI...
+[17:32:28] [Render thread/INFO]: [LC] Loading RCOIIHRCCCRIHHIHHIOIOCOIIHRCIC...
+[17:32:28] [Render thread/INFO]: [LC] Loading OICOOOOHIOCCHRIOCCIOOCRHHIIIIC...
+[17:32:28] [Render thread/INFO]: [LC] Loading HICROHHIIOIOOHCORCCRCHIHROCCIC...
+[17:32:28] [Render thread/INFO]: [LC] Loading OIOHIOIRRCCOHHIHROIOCCOIHCORIC...
+[17:32:28] [Render thread/INFO]: [LC] Loading ROHIROHOHCCRCROHIHROCHROHRCICR...
+[17:32:28] [Render thread/INFO]: [LC] Loading HIOHOROHCCRRCIIIHRROROHRIHCCOH...
+[17:32:28] [Render thread/INFO]: [LC] Loading OIIROOIRHHRCCCICHOCRRHRRROIIHH...
+[17:32:28] [Render thread/INFO]: [LC] Loading IORHORICRHOCROOCORRHHICIICCRII...
+[17:32:29] [Render thread/WARN]: [LC] Couldn't find dev cosmetics file: lunar:dev_cosmetics.json
+[17:32:29] [Render thread/INFO]: [LC] Loading OOORHIIHOHHICCRRCHRHICRRIHHICC...
+[17:32:29] [Render thread/INFO]: [LC] Loading ICCCCRCHRRCRHRCIOHOORHHOOCRCOI...
+[17:32:29] [Render thread/INFO]: [LC] Loading IRIIIHRRHCRHHCHOCOOHOHCICHCOOR...
+[17:32:29] [Render thread/INFO]: [LC] Loading ROCIIRIICIROOHCHOCIIHOOHORCOCH...
+[17:32:29] [Render thread/INFO]: [LC] Loading CROIIICOHRRIHHRORRIIOCIIHHCOHO...
+[17:32:29] [Render thread/INFO]: [LC] Loading IIHIORROOHCIOIIOIHICIIHCRHOICH...
+[17:32:30] [Render thread/INFO]: [LC] Loading RCOIIHRCCCRIHHIHHIOIOCOIIHRCIC...
+[17:32:30] [Render thread/INFO]: [LC] Loading RCOIIHRCCCRIHHIHHIOIOCOIIHRCIC...
+[17:32:30] [Render thread/INFO]: [LC] Finished making managers.
+[17:32:30] [Render thread/INFO]: [LC] Setting up listeners...
+[17:32:30] [Render thread/INFO]: [LC] Init GameUI and GameUIRenderer...
+[17:32:30] [Render thread/INFO]: [LC WebOSR] Loading native: UltralightCore
+[17:32:30] [Render thread/INFO]: [LC WebOSR] Loading native: WebCore
+[17:32:30] [Render thread/INFO]: [LC WebOSR] Loading native: Ultralight
+[17:32:30] [Render thread/INFO]: [LC WebOSR] Loading native: WebOSR-Binding
+[17:32:31] [WebSocketConnectReadThread-179/INFO]: [LC IPC] Connection established
+[17:32:31] [Render thread/INFO]: [LC] Setting up fixes...
+[17:32:31] [Render thread/INFO]: [LC Lang] Language set as ENGLISH (en_US).
+[17:32:31] [Render thread/INFO]: [LC Lang] Language file found: lang/lunar/en_US.
+[17:32:31] [pool-6-thread-3/INFO]: [LC Badges] Loaded 28 badges
+[17:32:31] [Render thread/INFO]: [LC Lang] Language file found: lang/lunar/en_US.
+[17:32:31] [Render thread/INFO]: [LC Ichor] Disabling ReplayMod because there is no valid link.
+[17:32:31] [Render thread/INFO]: [LC Ichor] Disabling NEU because there is no valid link.
+[17:32:31] [Render thread/INFO]: [LC Ichor] Disabling SBA because there is no valid link.
+[17:32:31] [Render thread/INFO]: [LC] Lunar.start
+[17:32:31] [Render thread/INFO]: [LC Accounts] Attempting to load account [6ad9ce829faf4cdb8c46ff3a5b0bceac]
+[17:32:31] [Render thread/INFO]: [LC Accounts] Loaded content for [LunarPlayer] Token IAT
