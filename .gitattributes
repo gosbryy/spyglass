@@ -1,3 +1,5 @@
 * text=auto eol=lf
 *.bat text eol=crlf
 *.jar binary
+
+backend/src/test/resources/logs/** -text

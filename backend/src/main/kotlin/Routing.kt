@@ -23,7 +23,6 @@ fun Application.configureRouting() {
             var fileName: String? = null
             var content: String? = null
             var player: String? = null
-            // TODO: использовать для выбора парсера, когда появится парсер neoforge
             var loader: String? = null
 
             call.receiveMultipart().forEachPart { part ->

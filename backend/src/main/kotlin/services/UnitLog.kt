@@ -9,7 +9,6 @@ import java.util.UUID
 fun unitLog(fileName: String, content: String, defaultPlayer: String? = null): LogReport {
     val parsed = parseFabricLog(fileName, content)
     val integrity = check(parsed, content)
-    // TODO: предупреждать, если ник в логе не совпадает с defaultPlayer или лоадер не совпадает с указанным в форме
 
     return LogReport(
         id = UUID.randomUUID().toString(),
