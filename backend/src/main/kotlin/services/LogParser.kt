@@ -26,6 +26,7 @@ private val PLATFORM_MOD_IDS = setOf("minecraft", "java", "fabricloader")
 
 class LogParseException(message: String) : Exception(message)
 class UnsupportedFileTypeException(fileName: String?) : RuntimeException("Unsupported file type: $fileName")
+class UnsupportedLoaderException(loader: String) : RuntimeException("Unsupported loader: $loader")
 
 fun parseFabricLog(fileName: String, content: String): ParsedLog {
     val lines = content.lines()

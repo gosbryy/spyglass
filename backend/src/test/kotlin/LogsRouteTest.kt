@@ -18,6 +18,7 @@ class LogsRouteTest {
         content: String?,
         fileName: String? = "latest.log",
         player: String? = null,
+        loader: String? = null,
     ): HttpResponse = submitFormWithBinaryData(
         url = "/api/v1/logs",
         formData = formData {
@@ -32,6 +33,7 @@ class LogsRouteTest {
                 )
             }
             if (player != null) append("player", player)
+            if (loader != null) append("loader", loader)
         },
     )
 
@@ -93,5 +95,49 @@ class LogsRouteTest {
 
         assertEquals(HttpStatusCode.BadRequest, response.status)
         assertEquals("FILE_MISSING", Json.decodeFromString<ErrorResponse>(response.bodyAsText()).code)
+    }
+
+    @Test
+    fun `non-log file is unsupported media type`() = testApplication {
+        configure()
+        val response = client.uploadLog(FabricLogs.content, fileName = "latest.txt")
+
+        assertEquals(HttpStatusCode.UnsupportedMediaType, response.status)
+        assertEquals("UNSUPPORTED_FILE_TYPE", Json.decodeFromString<ErrorResponse>(response.bodyAsText()).code)
+    }
+
+    @Test
+    fun `loader from form is case insensitive`() = testApplication {
+        configure()
+        val response = client.uploadLog(FabricLogs.content, loader = "fabric")
+
+        assertEquals(HttpStatusCode.Created, response.status)
+        assertEquals(Loader.FABRIC, Json.decodeFromString<LogReport>(response.bodyAsText()).loader)
+    }
+
+    @Test
+    fun `blank loader from form is ignored`() = testApplication {
+        configure()
+        val response = client.uploadLog(FabricLogs.content, loader = "  ")
+
+        assertEquals(HttpStatusCode.Created, response.status)
+    }
+
+    @Test
+    fun `unknown loader is bad request`() = testApplication {
+        configure()
+        val response = client.uploadLog(FabricLogs.content, loader = "quilt")
+
+        assertEquals(HttpStatusCode.BadRequest, response.status)
+        assertEquals("BAD_REQUEST", Json.decodeFromString<ErrorResponse>(response.bodyAsText()).code)
+    }
+
+    @Test
+    fun `neoforge loader is not supported yet`() = testApplication {
+        configure()
+        val response = client.uploadLog(FabricLogs.content, loader = "NEOFORGE")
+
+        assertEquals(HttpStatusCode.UnprocessableEntity, response.status)
+        assertEquals("UNSUPPORTED_LOADER", Json.decodeFromString<ErrorResponse>(response.bodyAsText()).code)
     }
 }

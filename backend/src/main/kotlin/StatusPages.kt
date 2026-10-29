@@ -2,6 +2,7 @@ package gosbry
 
 import gosbry.services.LogParseException
 import gosbry.services.UnsupportedFileTypeException
+import gosbry.services.UnsupportedLoaderException
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
@@ -20,6 +21,12 @@ fun Application.configureStatusPages() {
             call.respond(
                 HttpStatusCode.UnsupportedMediaType,
                 ErrorResponse("UNSUPPORTED_FILE_TYPE", cause.message ?: "Only .log files are accepted"),
+            )
+        }
+        exception<UnsupportedLoaderException> { call, cause ->
+            call.respond(
+                HttpStatusCode.UnprocessableEntity,
+                ErrorResponse("UNSUPPORTED_LOADER", cause.message ?: "Loader is not supported yet"),
             )
         }
         exception<BadRequestException> { call, cause ->

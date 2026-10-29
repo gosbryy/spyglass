@@ -4,4 +4,5 @@ ktor:
   application:
     modules:
       - gosbry.SerializationKt.configureSerialization
+      - gosbry.StatusPagesKt.configureStatusPages
       - gosbry.RoutingKt.configureRouting

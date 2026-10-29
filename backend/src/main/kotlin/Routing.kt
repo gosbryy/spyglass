@@ -1,6 +1,7 @@
 package gosbry
 
 import gosbry.services.UnsupportedFileTypeException
+import gosbry.services.parseLoader
 import gosbry.services.unitLog
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.PartData
@@ -24,7 +25,7 @@ fun Application.configureRouting() {
             var fileName: String? = null
             var content: String? = null
             var player: String? = null
-            var loader: String? = null
+            var loader: Loader? = null
 
             call.receiveMultipart().forEachPart { part ->
                 try {
@@ -42,7 +43,7 @@ fun Application.configureRouting() {
                         }
 
                         part is PartData.FormItem && part.name == "loader" -> {
-                            loader = part.value
+                            loader = parseLoader(part.value)
                         }
                     }
                 } finally {
