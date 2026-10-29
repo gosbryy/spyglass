@@ -1,5 +1,6 @@
 package gosbry
 
+import gosbry.services.UnsupportedFileTypeException
 import gosbry.services.unitLog
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.PartData
@@ -30,6 +31,9 @@ fun Application.configureRouting() {
                     when {
                         part is PartData.FileItem && part.name == "file" -> {
                             fileName = part.originalFileName
+                            if (fileName == null || !fileName!!.endsWith(".log", ignoreCase = true)) {
+                                throw UnsupportedFileTypeException(fileName)
+                            }
                             content = part.provider().readBuffer().readText()
                         }
 

@@ -1,6 +1,7 @@
 package gosbry
 
 import gosbry.services.LogParseException
+import gosbry.services.UnsupportedFileTypeException
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
@@ -13,6 +14,12 @@ fun Application.configureStatusPages() {
             call.respond(
                 HttpStatusCode.UnprocessableEntity,
                 ErrorResponse("LOG_PARSE_FAILED", cause.message ?: "Cannot parse log"),
+            )
+        }
+        exception<UnsupportedFileTypeException> { call, cause ->
+            call.respond(
+                HttpStatusCode.UnsupportedMediaType,
+                ErrorResponse("UNSUPPORTED_FILE_TYPE", cause.message ?: "Only .log files are accepted"),
             )
         }
         exception<BadRequestException> { call, cause ->
