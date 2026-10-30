@@ -26,8 +26,8 @@ dependencies {
     implementation(ktorLibs.server.contentNegotiation)
     implementation(ktorLibs.server.core)
     implementation(ktorLibs.server.netty)
+    implementation(ktorLibs.server.statusPages)
     implementation(libs.logback.classic)
-    implementation("io.ktor:ktor-server-status-pages:3.6.0")
 
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)
