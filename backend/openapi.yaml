@@ -11,8 +11,6 @@ info:
     Этап 1: загрузчик Fabric. Этап 2: Fabric и NeoForge.
 
 tags:
-  - name: System
-    description: Служебные эндпоинты
   - name: Auth
     description: Регистрация и вход
   - name: Users
@@ -21,21 +19,6 @@ tags:
     description: Загрузка, разбор и история логов
 
 paths:
-  # ---------- System ----------
-  /health:
-    get:
-      tags: [System]
-      operationId: getHealth
-      summary: Проверка живости сервиса
-      description: Нужен для docker compose healthcheck и Kubernetes probes.
-      responses:
-        "200":
-          description: Сервис работает
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/HealthResponse"
-
   # ---------- Auth ----------
   # В пути есть /api/v1 - версия API. Если когда-нибудь контракт придётся ломать,
   # появится /api/v2, а старые клиенты продолжат работать.

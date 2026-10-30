@@ -15,12 +15,6 @@ import io.ktor.utils.io.readText
 
 fun Application.configureRouting() {
     routing {
-        get("/") {
-            call.respondText("Hello, World!")
-        }
-        get("/json/kotlinx-serialization") {
-            call.respond(mapOf("hello" to "world"))
-        }
         post("/api/v1/logs") {
             var fileName: String? = null
             var content: String? = null
