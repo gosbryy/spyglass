@@ -1,5 +1,6 @@
 package gosbry
 
+import gosbry.services.FileTooLargeException
 import gosbry.services.LogParseException
 import gosbry.services.UnsupportedFileTypeException
 import gosbry.services.UnsupportedLoaderException
@@ -21,6 +22,12 @@ fun Application.configureStatusPages() {
             call.respond(
                 HttpStatusCode.UnsupportedMediaType,
                 ErrorResponse("UNSUPPORTED_FILE_TYPE", cause.message ?: "Only .log files are accepted"),
+            )
+        }
+        exception<FileTooLargeException> { call, cause ->
+            call.respond(
+                HttpStatusCode.PayloadTooLarge,
+                ErrorResponse("FILE_TOO_LARGE", cause.message ?: "File is too large"),
             )
         }
         exception<UnsupportedLoaderException> { call, cause ->

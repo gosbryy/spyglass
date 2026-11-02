@@ -8,6 +8,7 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
+import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
 import kotlinx.serialization.json.Json
 import kotlin.test.*
@@ -139,5 +140,42 @@ class LogsRouteTest {
 
         assertEquals(HttpStatusCode.UnprocessableEntity, response.status)
         assertEquals("UNSUPPORTED_LOADER", Json.decodeFromString<ErrorResponse>(response.bodyAsText()).code)
+    }
+
+    // маленький лимит, чтобы не гонять в тестах файлы по 10 МБ
+    private val testLimit = 64 * 1024
+
+    private fun ApplicationTestBuilder.configureWithLimit() = configure(
+        overrides = { put("spyglass.upload.maxFileSize", testLimit.toString()) },
+    )
+
+    @Test
+    fun `file over limit is payload too large`() = testApplication {
+        configureWithLimit()
+        // Content-Length укладывается в запас, поэтому срабатывает проверка при чтении файла
+        val response = client.uploadLog("a".repeat(testLimit + 1))
+
+        assertEquals(HttpStatusCode.PayloadTooLarge, response.status)
+        assertEquals("FILE_TOO_LARGE", Json.decodeFromString<ErrorResponse>(response.bodyAsText()).code)
+    }
+
+    @Test
+    fun `request with huge content length is rejected before reading`() = testApplication {
+        configureWithLimit()
+        // больше лимита + запаса на multipart (64 КБ), отказ по заголовку Content-Length
+        val response = client.uploadLog("a".repeat(testLimit + 64 * 1024 + 1))
+
+        assertEquals(HttpStatusCode.PayloadTooLarge, response.status)
+        assertEquals("FILE_TOO_LARGE", Json.decodeFromString<ErrorResponse>(response.bodyAsText()).code)
+    }
+
+    @Test
+    fun `file exactly at limit is accepted`() = testApplication {
+        configureWithLimit()
+        // дополняем по байтам, а не символам: в логе есть многобайтовый '§'
+        val padding = testLimit - FabricLogs.content.toByteArray().size
+        val response = client.uploadLog(FabricLogs.content + "\n".repeat(padding))
+
+        assertEquals(HttpStatusCode.Created, response.status)
     }
 }

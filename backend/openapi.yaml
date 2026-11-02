@@ -196,7 +196,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: Файл `.log` (latest.log и т.п.)
+                  description: Файл `.log` (latest.log и т.п.), не больше 10 МБ
                 player:
                   type: string
                   maxLength: 64
@@ -216,7 +216,7 @@ paths:
         "401":
           $ref: "#/components/responses/Unauthorized"
         "413":
-          description: Файл слишком большой
+          description: Файл больше 10 МБ (код `FILE_TOO_LARGE`)
           content:
             application/json:
               schema:
