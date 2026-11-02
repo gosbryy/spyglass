@@ -16,8 +16,14 @@ import kotlinx.io.readByteArray
 // запас на границы multipart и остальные поля формы
 private const val MULTIPART_OVERHEAD = 64L * 1024
 
-// совпадает с maxLength у поля player в openapi.yaml; в Minecraft ник не длиннее 16 символов
+// максимальная длина игрового ника
 private const val MAX_PLAYER_LENGTH = 16
+
+// имя в отчёте по-умолчанию
+private const val DEFAULT_FILE_NAME = "latest.log"
+
+// максимальная длина имени лога
+private const val MAX_FILE_NAME_LENGTH = 255
 
 fun Application.configureRouting() {
     // лимит задаётся только в application.yaml; если ключа нет, сервер упадёт при старте
@@ -31,7 +37,8 @@ fun Application.configureRouting() {
                 throw FileTooLargeException(maxFileSize)
             }
 
-            var fileName: String? = null
+            var uploadedFileName: String? = null
+            var customFileName: String? = null
             var content: String? = null
             var player: String? = null
             var loader: Loader? = null
@@ -40,10 +47,12 @@ fun Application.configureRouting() {
                 try {
                     when {
                         part is PartData.FileItem && part.name == "file" -> {
-                            fileName = part.originalFileName
-                            if (fileName == null || !fileName!!.endsWith(".log", ignoreCase = true)) {
-                                throw UnsupportedFileTypeException(fileName)
+                            // filename="" считаем отсутствующим именем: тогда проверять расширение не на чем
+                            val name = part.originalFileName?.takeIf { it.isNotBlank() }
+                            if (name != null && !name.endsWith(".log", ignoreCase = true)) {
+                                throw UnsupportedFileTypeException(name)
                             }
+                            uploadedFileName = name
                             // читаем не больше лимита + 1 байт: если байт лишний, файл слишком большой
                             val bytes = part.provider().readBuffer(maxFileSize + 1).readByteArray()
                             if (bytes.size > maxFileSize) throw FileTooLargeException(maxFileSize)
@@ -56,6 +65,14 @@ fun Application.configureRouting() {
                                 throw PlayerTooLongException(MAX_PLAYER_LENGTH)
                             }
                             player = value
+                        }
+
+                        part is PartData.FormItem && part.name == "fileName" -> {
+                            val value = part.value.trim()
+                            if (value.length > MAX_FILE_NAME_LENGTH) {
+                                throw FileNameTooLongException(MAX_FILE_NAME_LENGTH)
+                            }
+                            customFileName = value.takeIf { it.isNotEmpty() }
                         }
 
                         part is PartData.FormItem && part.name == "loader" -> {
@@ -72,7 +89,9 @@ fun Application.configureRouting() {
                 ErrorResponse("FILE_MISSING", "Field 'file' is required"),
             )
             val defaultPlayer = player?.takeIf { it.isNotEmpty() }
-            call.respond(HttpStatusCode.Created, unitLog(fileName ?: "latest.log", text, defaultPlayer))
+            // приоритет: имя из формы -> имя загруженного файла -> latest.log
+            val fileName = customFileName ?: uploadedFileName ?: DEFAULT_FILE_NAME
+            call.respond(HttpStatusCode.Created, unitLog(fileName, text, defaultPlayer))
         }
     }
 }

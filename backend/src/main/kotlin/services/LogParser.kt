@@ -25,7 +25,7 @@ private val FORMATTING_CODE = Regex("§.")
 // не моды в привычном смысле, а сама платформа
 private val PLATFORM_MOD_IDS = setOf("minecraft", "java", "fabricloader")
 
-fun parseFabricLog(fileName: String, content: String): ParsedLog {
+fun parseFabricLog(content: String): ParsedLog {
     val lines = content.lines()
 
     val header = lines.firstNotNullOfOrNull { FABRIC_HEADER.find(it) }

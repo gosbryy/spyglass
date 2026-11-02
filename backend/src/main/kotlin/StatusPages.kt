@@ -26,6 +26,12 @@ fun Application.configureStatusPages() {
                 ErrorResponse("FILE_TOO_LARGE", cause.message ?: "File is too large"),
             )
         }
+        exception<FileNameTooLongException> { call, cause ->
+            call.respond(
+                HttpStatusCode.BadRequest,
+                ErrorResponse("FILE_NAME_TOO_LONG", cause.message ?: "File name is too long"),
+            )
+        }
         exception<PlayerTooLongException> { call, cause ->
             call.respond(
                 HttpStatusCode.BadRequest,

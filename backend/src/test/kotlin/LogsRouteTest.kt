@@ -20,6 +20,7 @@ class LogsRouteTest {
         fileName: String? = "latest.log",
         player: String? = null,
         loader: String? = null,
+        customFileName: String? = null,
     ): HttpResponse = submitFormWithBinaryData(
         url = "/api/v1/logs",
         formData = formData {
@@ -35,6 +36,7 @@ class LogsRouteTest {
             }
             if (player != null) append("player", player)
             if (loader != null) append("loader", loader)
+            if (customFileName != null) append("fileName", customFileName)
         },
     )
 
@@ -209,5 +211,60 @@ class LogsRouteTest {
 
         assertEquals(HttpStatusCode.Created, response.status)
         assertEquals(nick, Json.decodeFromString<LogReport>(response.bodyAsText()).player)
+    }
+
+    @Test
+    fun `file name from form is used`() = testApplication {
+        configure()
+        val response = client.uploadLog(FabricLogs.content, fileName = "client.log", customFileName = "  мой лог  ")
+
+        assertEquals(HttpStatusCode.Created, response.status)
+        assertEquals("мой лог", Json.decodeFromString<LogReport>(response.bodyAsText()).fileName)
+    }
+
+    @Test
+    fun `blank file name from form falls back to uploaded file name`() = testApplication {
+        configure()
+        val response = client.uploadLog(FabricLogs.content, fileName = "client.log", customFileName = "   ")
+
+        assertEquals(HttpStatusCode.Created, response.status)
+        assertEquals("client.log", Json.decodeFromString<LogReport>(response.bodyAsText()).fileName)
+    }
+
+    @Test
+    fun `empty uploaded file name falls back to latest log`() = testApplication {
+        configure()
+        val response = client.uploadLog(FabricLogs.content, fileName = "")
+
+        assertEquals(HttpStatusCode.Created, response.status)
+        assertEquals("latest.log", Json.decodeFromString<LogReport>(response.bodyAsText()).fileName)
+    }
+
+    // имя из формы не обходит проверку расширения у самого файла
+    @Test
+    fun `file name from form does not bypass log extension check`() = testApplication {
+        configure()
+        val response = client.uploadLog(FabricLogs.content, fileName = "latest.txt", customFileName = "latest.log")
+
+        assertEquals(HttpStatusCode.UnsupportedMediaType, response.status)
+    }
+
+    @Test
+    fun `file name at max length is accepted`() = testApplication {
+        configure()
+        val name = "a".repeat(255)
+        val response = client.uploadLog(FabricLogs.content, customFileName = "  $name  ")
+
+        assertEquals(HttpStatusCode.Created, response.status)
+        assertEquals(name, Json.decodeFromString<LogReport>(response.bodyAsText()).fileName)
+    }
+
+    @Test
+    fun `file name over max length is bad request`() = testApplication {
+        configure()
+        val response = client.uploadLog(FabricLogs.content, customFileName = "a".repeat(256))
+
+        assertEquals(HttpStatusCode.BadRequest, response.status)
+        assertEquals("FILE_NAME_TOO_LONG", Json.decodeFromString<ErrorResponse>(response.bodyAsText()).code)
     }
 }

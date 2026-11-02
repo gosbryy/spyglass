@@ -7,7 +7,7 @@ import java.util.UUID
 // пока поддерживается только fabric
 // defaultPlayer - ник из формы, подставляется, если в логе нет "Setting user"
 fun unitLog(fileName: String, content: String, defaultPlayer: String? = null): LogReport {
-    val parsed = parseFabricLog(fileName, content)
+    val parsed = parseFabricLog(content)
     val integrity = check(parsed, content)
 
     return LogReport(

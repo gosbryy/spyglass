@@ -11,7 +11,7 @@ class LogParserTest {
 
     @Test
     fun `reads loader and minecraft version from header`() {
-        val parsed = parseFabricLog("latest.log", FabricLogs.content)
+        val parsed = parseFabricLog(FabricLogs.content)
 
         assertEquals(Loader.FABRIC, parsed.loader)
         assertEquals("1.21.1", parsed.minecraftVersion)
@@ -19,7 +19,7 @@ class LogParserTest {
 
     @Test
     fun `keeps only top-level mods without platform`() {
-        val parsed = parseFabricLog("latest.log", FabricLogs.content)
+        val parsed = parseFabricLog(FabricLogs.content)
 
         assertEquals(
             listOf(
@@ -33,19 +33,19 @@ class LogParserTest {
 
     @Test
     fun `reads player from Setting user`() {
-        assertEquals("Steve", parseFabricLog("latest.log", FabricLogs.content).player)
+        assertEquals("Steve", parseFabricLog(FabricLogs.content).player)
     }
 
     @Test
     fun `player is null when log has no Setting user`() {
         val content = FabricLogs.unix(FabricLogs.withoutLine("[18:31:20]"))
 
-        assertNull(parseFabricLog("latest.log", content).player)
+        assertNull(parseFabricLog(content).player)
     }
 
     @Test
     fun `takes user packs from first reload and strips formatting codes`() {
-        val parsed = parseFabricLog("latest.log", FabricLogs.content)
+        val parsed = parseFabricLog(FabricLogs.content)
 
         assertEquals(
             listOf(ResourcePackEntry("Faithful 32x"), ResourcePackEntry("Clean UI")),
@@ -58,21 +58,21 @@ class LogParserTest {
     fun `no resource manager line gives no packs`() {
         val content = FabricLogs.unix(FabricLogs.lines.filterNot { "Reloading ResourceManager" in it })
 
-        assertTrue(parseFabricLog("latest.log", content).resourcePacks.isEmpty())
+        assertTrue(parseFabricLog(content).resourcePacks.isEmpty())
     }
 
     @Test
     fun `no mods header gives no mods`() {
         val content = FabricLogs.unix(FabricLogs.lines.filterNot { it.startsWith("\t") || "Loading 7 mods" in it })
 
-        assertTrue(parseFabricLog("latest.log", content).mods.isEmpty())
+        assertTrue(parseFabricLog(content).mods.isEmpty())
     }
 
     @Test
     fun `windows line endings parse the same`() {
         assertEquals(
-            parseFabricLog("latest.log", FabricLogs.content),
-            parseFabricLog("latest.log", FabricLogs.windows(FabricLogs.lines)),
+            parseFabricLog(FabricLogs.content),
+            parseFabricLog(FabricLogs.windows(FabricLogs.lines)),
         )
     }
 
@@ -80,11 +80,11 @@ class LogParserTest {
     fun `non-fabric log is rejected`() {
         val content = "[12:00:00] [main/INFO]: ModLauncher running: args [--fml.neoForgeVersion, 21.1.77]\n"
 
-        assertFailsWith<LogParseException> { parseFabricLog("latest.log", content) }
+        assertFailsWith<LogParseException> { parseFabricLog(content) }
     }
 
     @Test
     fun `empty file is rejected`() {
-        assertFailsWith<LogParseException> { parseFabricLog("latest.log", "") }
+        assertFailsWith<LogParseException> { parseFabricLog("") }
     }
 }
