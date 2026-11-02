@@ -199,8 +199,11 @@ paths:
                   description: Файл `.log` (latest.log и т.п.), не больше 10 МБ
                 player:
                   type: string
-                  maxLength: 64
-                  description: Ник игрока, чей это лог (чтобы потом искать по истории)
+                  maxLength: 16
+                  description: |
+                    Ник игрока, чей это лог (чтобы потом искать по истории).
+                    Пробелы по краям обрезаются, длина считается после обрезки.
+                    Длиннее 16 символов - 400 с кодом `PLAYER_TOO_LONG`.
                   example: Steve
                 loader:
                   $ref: "#/components/schemas/Loader"

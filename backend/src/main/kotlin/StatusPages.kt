@@ -26,6 +26,12 @@ fun Application.configureStatusPages() {
                 ErrorResponse("FILE_TOO_LARGE", cause.message ?: "File is too large"),
             )
         }
+        exception<PlayerTooLongException> { call, cause ->
+            call.respond(
+                HttpStatusCode.BadRequest,
+                ErrorResponse("PLAYER_TOO_LONG", cause.message ?: "Player name is too long"),
+            )
+        }
         exception<UnsupportedLoaderException> { call, cause ->
             call.respond(
                 HttpStatusCode.UnprocessableEntity,

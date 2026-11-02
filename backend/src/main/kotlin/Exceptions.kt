@@ -9,3 +9,5 @@ class UnsupportedFileTypeException(fileName: String?) : RuntimeException("Unsupp
 class UnsupportedLoaderException(loader: String) : RuntimeException("Unsupported loader: $loader")
 
 class FileTooLargeException(maxBytes: Long) : RuntimeException("File is larger than $maxBytes bytes")
+
+class PlayerTooLongException(maxLength: Int) : RuntimeException("Player name is longer than $maxLength characters")

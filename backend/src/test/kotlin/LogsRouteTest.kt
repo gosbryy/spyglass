@@ -178,4 +178,36 @@ class LogsRouteTest {
 
         assertEquals(HttpStatusCode.Created, response.status)
     }
+
+    // лог без строки "Setting user", чтобы в отчёт попал ник из формы
+    private val logWithoutPlayer = FabricLogs.unix(FabricLogs.withoutLine("[18:31:20]"))
+
+    @Test
+    fun `player at max length is accepted`() = testApplication {
+        configure()
+        val nick = "a".repeat(16)
+        val response = client.uploadLog(logWithoutPlayer, player = nick)
+
+        assertEquals(HttpStatusCode.Created, response.status)
+        assertEquals(nick, Json.decodeFromString<LogReport>(response.bodyAsText()).player)
+    }
+
+    @Test
+    fun `player over max length is bad request`() = testApplication {
+        configure()
+        val response = client.uploadLog(logWithoutPlayer, player = "a".repeat(17))
+
+        assertEquals(HttpStatusCode.BadRequest, response.status)
+        assertEquals("PLAYER_TOO_LONG", Json.decodeFromString<ErrorResponse>(response.bodyAsText()).code)
+    }
+
+    @Test
+    fun `surrounding spaces do not count towards player length`() = testApplication {
+        configure()
+        val nick = "a".repeat(16)
+        val response = client.uploadLog(logWithoutPlayer, player = "   $nick   ")
+
+        assertEquals(HttpStatusCode.Created, response.status)
+        assertEquals(nick, Json.decodeFromString<LogReport>(response.bodyAsText()).player)
+    }
 }
