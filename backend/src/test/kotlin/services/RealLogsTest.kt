@@ -2,6 +2,7 @@ package gosbry.services
 
 import gosbry.IntegrityStatus
 import gosbry.Loader
+import gosbry.LogParseException
 import gosbry.RealLogs
 import kotlin.test.*
 

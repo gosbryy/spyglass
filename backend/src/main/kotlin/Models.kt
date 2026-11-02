@@ -3,9 +3,6 @@ package gosbry
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class HealthResponse(val status: String)
-
-@Serializable
 data class ErrorResponse(
     val code: String,
     val message: String,
@@ -24,14 +21,7 @@ data class LoginRequest(
     val password: String,
 )
 
-@Serializable
-data class TokenResponse(
-    val accessToken: String,
-    val tokenType: String, // всегда Bearer
-    val expiresIn: Long, // секунды
-)
-
-// ответы регистрации, GET /users/me, PATCH /users/me
+// ответы регистрации, входа, GET /users/me, PATCH /users/me
 @Serializable
 data class UserResponse(
     val id: String,

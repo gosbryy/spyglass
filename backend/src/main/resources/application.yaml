@@ -4,4 +4,9 @@ ktor:
   application:
     modules:
       - gosbry.SerializationKt.configureSerialization
+      - gosbry.StatusPagesKt.configureStatusPages
       - gosbry.RoutingKt.configureRouting
+spyglass:
+  upload:
+    # максимальный размер загружаемого лога (10 МБ)
+    maxFileSize: 10485760

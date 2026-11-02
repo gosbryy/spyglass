@@ -1,6 +1,7 @@
 package gosbry.services
 
 import gosbry.Loader
+import gosbry.LogParseException
 import gosbry.ModEntry
 import gosbry.ParsedLog
 import gosbry.ResourcePackEntry
@@ -24,9 +25,7 @@ private val FORMATTING_CODE = Regex("§.")
 // не моды в привычном смысле, а сама платформа
 private val PLATFORM_MOD_IDS = setOf("minecraft", "java", "fabricloader")
 
-class LogParseException(message: String) : Exception(message)
-
-fun parseFabricLog(fileName: String, content: String): ParsedLog {
+fun parseFabricLog(content: String): ParsedLog {
     val lines = content.lines()
 
     val header = lines.firstNotNullOfOrNull { FABRIC_HEADER.find(it) }

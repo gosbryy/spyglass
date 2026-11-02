@@ -11,8 +11,6 @@ info:
     Этап 1: загрузчик Fabric. Этап 2: Fabric и NeoForge.
 
 tags:
-  - name: System
-    description: Служебные эндпоинты
   - name: Auth
     description: Регистрация и вход
   - name: Users
@@ -21,21 +19,6 @@ tags:
     description: Загрузка, разбор и история логов
 
 paths:
-  # ---------- System ----------
-  /health:
-    get:
-      tags: [System]
-      operationId: getHealth
-      summary: Проверка живости сервиса
-      description: Нужен для docker compose healthcheck и Kubernetes probes.
-      responses:
-        "200":
-          description: Сервис работает
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/HealthResponse"
-
   # ---------- Auth ----------
   # В пути есть /api/v1 - версия API. Если когда-нибудь контракт придётся ломать,
   # появится /api/v2, а старые клиенты продолжат работать.
@@ -44,6 +27,9 @@ paths:
       tags: [Auth]
       operationId: register
       summary: Регистрация нового пользователя
+      description: Регистрация открытая. Сразу после неё пользователь не вошёл - нужен /auth/login.
+      # пустой список - эндпоинт публичный, токен не нужен
+      security: []
       requestBody:
         required: true
         content:
@@ -70,7 +56,12 @@ paths:
     post:
       tags: [Auth]
       operationId: login
-      summary: Вход и получение JWT
+      summary: Вход
+      security: []
+      description: |
+        Сервер кладёт JWT в httpOnly cookie, в теле ответа токена нет:
+        JavaScript страницы не может его прочитать, поэтому его не украсть через XSS.
+        Браузер сам отправляет cookie со всеми следующими запросами.
       requestBody:
         required: true
         content:
@@ -80,12 +71,38 @@ paths:
       responses:
         "200":
           description: Успешный вход
+          headers:
+            Set-Cookie:
+              description: |
+                `spyglass_token=<JWT>; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=604800`.
+                SameSite=Lax не даёт чужим сайтам отправить запрос с этой cookie (защита от CSRF).
+              schema:
+                type: string
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TokenResponse"
+                $ref: "#/components/schemas/UserResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/v1/auth/logout:
+    post:
+      tags: [Auth]
+      operationId: logout
+      summary: Выход
+      description: Сервер стирает cookie, отправляя её с пустым значением и Max-Age=0.
+      security:
+        - cookieAuth: []
+      responses:
+        "204":
+          description: Cookie удалена
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: spyglass_token=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0
         "401":
           $ref: "#/components/responses/Unauthorized"
 
@@ -98,7 +115,7 @@ paths:
       operationId: getProfile
       summary: Получить свой профиль
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       responses:
         "200":
           description: Профиль
@@ -116,7 +133,7 @@ paths:
         PATCH меняет только переданные поля, остальные остаются как были
         (в отличие от PUT, который заменяет объект целиком).
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       requestBody:
         required: true
         content:
@@ -146,7 +163,7 @@ paths:
       summary: Удалить свой аккаунт
       description: Вместе с аккаунтом удаляется вся история логов пользователя.
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       responses:
         "204":
           description: Аккаунт удалён
@@ -166,7 +183,7 @@ paths:
         сохраняет результат в историю и возвращает отчёт.
         Идентификатор создаёт сервер, поэтому в пути его нет.
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       requestBody:
         required: true
         content:
@@ -179,12 +196,24 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: Файл `.log` (latest.log и т.п.)
+                  description: Файл `.log` (latest.log и т.п.), не больше 10 МБ
                 player:
                   type: string
-                  maxLength: 64
-                  description: Ник игрока, чей это лог (чтобы потом искать по истории)
+                  maxLength: 16
+                  description: |
+                    Ник игрока, чей это лог (чтобы потом искать по истории).
+                    Пробелы по краям обрезаются, длина считается после обрезки.
+                    Длиннее 16 символов - 400 с кодом `PLAYER_TOO_LONG`.
                   example: Steve
+                fileName:
+                  type: string
+                  maxLength: 255
+                  description: |
+                    Имя лога в отчёте. Пробелы по краям обрезаются, длина считается после обрезки.
+                    Длиннее 255 символов - 400 с кодом `FILE_NAME_TOO_LONG`.
+                    Если не задано или пустое, берётся имя загруженного файла,
+                    а если и его нет (`filename=""`) - `latest.log`.
+                  example: мой лог
                 loader:
                   $ref: "#/components/schemas/Loader"
       responses:
@@ -199,7 +228,7 @@ paths:
         "401":
           $ref: "#/components/responses/Unauthorized"
         "413":
-          description: Файл слишком большой
+          description: Файл больше 10 МБ (код `FILE_TOO_LARGE`)
           content:
             application/json:
               schema:
@@ -215,7 +244,7 @@ paths:
       operationId: listLogs
       summary: История моих логов
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       parameters:
         - name: page
           in: query
@@ -261,7 +290,7 @@ paths:
       operationId: getLog
       summary: Полный отчёт по логу
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       responses:
         "200":
           description: Отчёт
@@ -278,7 +307,7 @@ paths:
       operationId: deleteLog
       summary: Удалить лог из истории
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       responses:
         "204":
           description: Удалено
@@ -288,13 +317,14 @@ paths:
           $ref: "#/components/responses/NotFound"
 
 components:
-  # Схема авторизации: токен JWT в заголовке "Authorization: Bearer <токен>".
+  # Схема авторизации: JWT в httpOnly cookie, которую выставляет /auth/login.
   # Каждый защищённый эндпоинт выше указывает её через security.
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: spyglass_token
+      description: JWT, подписанный HS256, живёт 7 дней
 
   # Повторяющиеся ответы с ошибками описаны один раз
   responses:
@@ -305,7 +335,7 @@ components:
           schema:
             $ref: "#/components/schemas/ErrorResponse"
     Unauthorized:
-      description: Нет токена или он недействителен
+      description: Нет cookie с токеном, токен недействителен или истёк (для /auth/login - неверный логин или пароль)
       content:
         application/json:
           schema:
@@ -366,21 +396,6 @@ components:
         password:
           type: string
           format: password
-
-    TokenResponse:
-      type: object
-      required: [accessToken, tokenType, expiresIn]
-      properties:
-        accessToken:
-          type: string
-        tokenType:
-          type: string
-          example: Bearer
-        expiresIn:
-          type: integer
-          format: int64
-          description: Время жизни токена в секундах
-          example: 3600
 
     UserResponse:
       type: object
