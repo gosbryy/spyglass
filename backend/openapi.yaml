@@ -204,6 +204,7 @@ paths:
                     Ник игрока, чей это лог (чтобы потом искать по истории).
                     Пробелы по краям обрезаются, длина считается после обрезки.
                     Длиннее 16 символов - 400 с кодом `PLAYER_TOO_LONG`.
+                  example: Steve
                 fileName:
                   type: string
                   maxLength: 255
@@ -213,7 +214,6 @@ paths:
                     Если не задано или пустое, берётся имя загруженного файла,
                     а если и его нет (`filename=""`) - `latest.log`.
                   example: мой лог
-                  example: Steve
                 loader:
                   $ref: "#/components/schemas/Loader"
       responses:
