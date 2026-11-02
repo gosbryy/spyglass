@@ -1,6 +1,7 @@
 package gosbry.services
 
 import gosbry.Loader
+import gosbry.UnsupportedLoaderException
 import io.ktor.server.plugins.BadRequestException
 
 fun parseLoader(value: String): Loader? {

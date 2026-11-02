@@ -2,6 +2,7 @@ package gosbry.services
 
 import gosbry.FabricLogs
 import gosbry.Loader
+import gosbry.LogParseException
 import gosbry.ModEntry
 import gosbry.ResourcePackEntry
 import kotlin.test.*
