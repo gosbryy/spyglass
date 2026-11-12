@@ -11,11 +11,6 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-# все run-шаги выполняются в backend/, где лежит самостоятельная Gradle-сборка
-defaults:
-  run:
-    working-directory: backend
-
 jobs:
   backend-test:
     runs-on: ubuntu-latest

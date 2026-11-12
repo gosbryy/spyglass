@@ -8,5 +8,9 @@ ktor:
       - gosbry.RoutingKt.configureRouting
 spyglass:
   upload:
-    # максимальный размер загружаемого лога (10 МБ)
-    maxFileSize: 10485760
+    # максимальный размер загружаемого лога (5 МБ)
+    maxFileSize: 5242880
+  db:
+    url: "$DB_URL:jdbc:postgresql://localhost:5432/spyglass"
+    user: "$DB_USER:spyglass"
+    password: "$DB_PASSWORD:spyglass"
