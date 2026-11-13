@@ -4,6 +4,7 @@ ktor:
   application:
     modules:
       - gosbry.SerializationKt.configureSerialization
+      - gosbry.DatabaseKt.configureDatabase
       - gosbry.StatusPagesKt.configureStatusPages
       - gosbry.RoutingKt.configureRouting
 spyglass:
