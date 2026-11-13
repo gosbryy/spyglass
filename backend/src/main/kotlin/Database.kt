@@ -8,7 +8,6 @@ import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.v1.jdbc.Database
 
 fun Application.configureDatabase() {
-
     val dbUrl = environment.config.property("spyglass.db.url").getString()
     val dbUser = environment.config.property("spyglass.db.user").getString()
     val dbPassword = environment.config.property("spyglass.db.password").getString()
