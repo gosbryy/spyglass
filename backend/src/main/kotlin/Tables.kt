@@ -15,7 +15,7 @@ import org.jetbrains.exposed.v1.json.jsonb
 private fun genRandomUuid() = CustomFunction("gen_random_uuid", UuidColumnType())
 
 object Users : Table("users") {
-    val id = uuid("id").defaultExpression(genRandomUuid())
+    val id = long("id").autoIncrement()
     val username = text("username")
     val email = text("email")
     val passwordHash = text("password_hash")

@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    id            UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+    id            BIGINT      GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     username      TEXT        NOT NULL UNIQUE,
     email         TEXT        NOT NULL UNIQUE,
     password_hash TEXT        NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE users (
 
 CREATE TABLE logs (
     id                  UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id             UUID        NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id             BIGINT      NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     file_name           TEXT        NOT NULL,
     file_path           TEXT        NOT NULL,           -- относительный путь к файлу на диске
     player              TEXT,
