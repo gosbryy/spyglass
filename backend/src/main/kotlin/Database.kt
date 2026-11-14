@@ -15,7 +15,7 @@ fun Application.configureDatabase() {
     val hikariConfig = HikariConfig().apply {
         jdbcUrl = dbUrl
         username = dbUser
-        this.password = dbPassword
+        password = dbPassword
         maximumPoolSize = 10
     }
     val dataSource = HikariDataSource(hikariConfig)

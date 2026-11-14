@@ -1,0 +1,21 @@
+# локальный Postgres для разработки и тестов
+# значения совпадают с дефолтами из backend/src/main/resources/application.yaml и с CI
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: spyglass
+      POSTGRES_USER: spyglass
+      POSTGRES_PASSWORD: spyglass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U spyglass"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pgdata:
