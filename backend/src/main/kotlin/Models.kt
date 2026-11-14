@@ -24,7 +24,7 @@ data class LoginRequest(
 // ответы регистрации, входа, GET /users/me, PATCH /users/me
 @Serializable
 data class UserResponse(
-    val id: String,
+    val id: Long,
     val username: String,
     val email: String,
     val createdAt: String,

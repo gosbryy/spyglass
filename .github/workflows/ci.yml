@@ -11,14 +11,24 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
-# все run-шаги выполняются в backend/, где лежит самостоятельная Gradle-сборка
-defaults:
-  run:
-    working-directory: backend
-
 jobs:
   backend-test:
     runs-on: ubuntu-latest
+    # значения совпадают с дефолтами из application.yaml
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: spyglass
+          POSTGRES_USER: spyglass
+          POSTGRES_PASSWORD: spyglass
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U spyglass"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
 

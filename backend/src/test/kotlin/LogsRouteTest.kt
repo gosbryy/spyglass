@@ -144,7 +144,7 @@ class LogsRouteTest {
         assertEquals("UNSUPPORTED_LOADER", Json.decodeFromString<ErrorResponse>(response.bodyAsText()).code)
     }
 
-    // маленький лимит, чтобы не гонять в тестах файлы по 10 МБ
+    // маленький лимит, чтобы не гонять в тестах файлы по 5 МБ
     private val testLimit = 64 * 1024
 
     private fun ApplicationTestBuilder.configureWithLimit() = configure(
