@@ -26,7 +26,6 @@ class RegisterRouteTest {
             configureStatusPages()
             configureRouting()
         }
-
     }
 
     private suspend fun HttpClient.register(email: String = "steve@example.com", password: String = "password123") =
