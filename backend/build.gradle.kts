@@ -25,6 +25,7 @@ dependencies {
     implementation(ktorLibs.server.netty)
     implementation(ktorLibs.server.statusPages)
     implementation(libs.logback.classic)
+    implementation(libs.password4j)
 
     implementation(libs.postgresql)
     implementation(libs.hikari)

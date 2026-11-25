@@ -1,5 +1,6 @@
 package gosbry
 
+import gosbry.services.hashPassword
 import gosbry.services.parseLoader
 import gosbry.services.unitLog
 import io.ktor.http.HttpStatusCode
@@ -7,6 +8,7 @@ import io.ktor.http.content.PartData
 import io.ktor.http.content.forEachPart
 import io.ktor.server.application.*
 import io.ktor.server.request.contentLength
+import io.ktor.server.request.receive
 import io.ktor.server.request.receiveMultipart
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -18,6 +20,12 @@ private const val MULTIPART_OVERHEAD = 64L * 1024
 
 // максимальная длина игрового ника
 private const val MAX_PLAYER_LENGTH = 16
+
+// минимальная длина имени игрока
+private const val MIN_PLAYER_LENGTH = 3
+
+private const val MIN_PASSWORD_LENGTH = 8
+private const val MAX_PASSWORD_LENGTH = 128
 
 // имя в отчёте по-умолчанию
 private const val DEFAULT_FILE_NAME = "latest.log"
@@ -62,7 +70,7 @@ fun Application.configureRouting() {
                         part is PartData.FormItem && part.name == "player" -> {
                             val value = part.value.trim()
                             if (value.length > MAX_PLAYER_LENGTH) {
-                                throw PlayerTooLongException(MAX_PLAYER_LENGTH)
+                                throw InvalidPlayerLengthException(MAX_PLAYER_LENGTH)
                             }
                             player = value
                         }
@@ -92,6 +100,29 @@ fun Application.configureRouting() {
             // приоритет: имя из формы -> имя загруженного файла -> latest.log
             val fileName = customFileName ?: uploadedFileName ?: DEFAULT_FILE_NAME
             call.respond(HttpStatusCode.Created, unitLog(fileName, text, defaultPlayer))
+        }
+        post("/api/v1/auth/register") {
+            val request = call.receive<RegisterRequest>()
+
+            if (request.username.length !in MIN_PLAYER_LENGTH..MAX_PLAYER_LENGTH) {
+                throw InvalidPlayerLengthException(MAX_PLAYER_LENGTH, MIN_PLAYER_LENGTH)
+            }
+            val passwordLength = request.password.codePointCount(0, request.password.length)
+            if (passwordLength !in MIN_PASSWORD_LENGTH..MAX_PASSWORD_LENGTH) {
+                throw InvalidPasswordLengthException(MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH)
+            }
+
+            val email = request.email.trim()
+            val at = email.indexOf('@')
+            if (email.any(Char::isWhitespace) || at <= 0 || at == email.lastIndex || at != email.lastIndexOf('@')) {
+                throw InvalidEmailException("Invalid email address")
+            }
+
+            val domainParts = email.substring(at + 1).split('.')
+            if (domainParts.size < 2 || domainParts.any { it.isEmpty() }) {
+                throw InvalidEmailException("Invalid email domain")
+            }
+            val hashedPassword = hashPassword(request.password)
         }
     }
 }
