@@ -13,7 +13,11 @@ import io.ktor.server.request.receiveMultipart
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.utils.io.readBuffer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.io.readByteArray
+import org.jetbrains.exposed.v1.jdbc.insertReturning
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 // запас на границы multipart и остальные поля формы
 private const val MULTIPART_OVERHEAD = 64L * 1024
@@ -123,6 +127,27 @@ fun Application.configureRouting() {
                 throw InvalidEmailException("Invalid email domain")
             }
             val hashedPassword = hashPassword(request.password)
+
+            val user = withContext(Dispatchers.IO) {
+                transaction {
+                    val row = Users.insertReturning(
+                        returning = listOf(Users.id, Users.username, Users.email, Users.createdAt),
+                    ) { insert ->
+                        insert[Users.username] = request.username
+                        insert[Users.email] = email
+                        insert[Users.passwordHash] = hashedPassword
+                    }.single()
+
+                    UserResponse(
+                        id = row[Users.id],
+                        username = row[Users.username],
+                        email = row[Users.email],
+                        createdAt = row[Users.createdAt].toString(),
+                    )
+                }
+            }
+
+            call.respond(HttpStatusCode.Created, user)
         }
     }
 }
