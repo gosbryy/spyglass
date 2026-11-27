@@ -7,6 +7,8 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.PartData
 import io.ktor.http.content.forEachPart
 import io.ktor.server.application.*
+import io.ktor.server.http.content.file
+import io.ktor.server.plugins.swagger.swaggerUI
 import io.ktor.server.request.contentLength
 import io.ktor.server.request.receive
 import io.ktor.server.request.receiveMultipart
@@ -43,6 +45,8 @@ fun Application.configureRouting() {
     val maxFileSize = environment.config.property("spyglass.upload.maxFileSize").getString().toLong()
 
     routing {
+        swaggerUI(path = "swagger", swaggerFile = "openapi.yaml")
+
         post("/api/v1/logs") {
             // если клиент честно прислал Content-Length, отказываем сразу, не читая тело
             val contentLength = call.request.contentLength()
