@@ -32,10 +32,22 @@ fun Application.configureStatusPages() {
                 ErrorResponse("FILE_NAME_TOO_LONG", cause.message ?: "File name is too long"),
             )
         }
-        exception<PlayerTooLongException> { call, cause ->
+        exception<InvalidPlayerLengthException> { call, cause ->
             call.respond(
                 HttpStatusCode.BadRequest,
-                ErrorResponse("PLAYER_TOO_LONG", cause.message ?: "Player name is too long"),
+                ErrorResponse("INVALID_PLAYER_LENGTH", cause.message ?: "Invalid player name length"),
+            )
+        }
+        exception<InvalidEmailException> { call, cause ->
+            call.respond(
+                HttpStatusCode.BadRequest,
+                ErrorResponse("INVALID_EMAIL", cause.message ?: "Invalid email address"),
+            )
+        }
+        exception<InvalidPasswordLengthException> { call, cause ->
+            call.respond(
+                HttpStatusCode.BadRequest,
+                ErrorResponse("INVALID_PASSWORD_LENGTH", cause.message ?: "Invalid password length"),
             )
         }
         exception<UnsupportedLoaderException> { call, cause ->

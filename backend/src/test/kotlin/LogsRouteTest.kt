@@ -200,7 +200,7 @@ class LogsRouteTest {
         val response = client.uploadLog(logWithoutPlayer, player = "a".repeat(17))
 
         assertEquals(HttpStatusCode.BadRequest, response.status)
-        assertEquals("PLAYER_TOO_LONG", Json.decodeFromString<ErrorResponse>(response.bodyAsText()).code)
+        assertEquals("INVALID_PLAYER_LENGTH", Json.decodeFromString<ErrorResponse>(response.bodyAsText()).code)
     }
 
     @Test

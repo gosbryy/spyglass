@@ -25,6 +25,7 @@ dependencies {
     implementation(ktorLibs.server.netty)
     implementation(ktorLibs.server.statusPages)
     implementation(libs.logback.classic)
+    implementation(libs.password4j)
 
     implementation(libs.postgresql)
     implementation(libs.hikari)
@@ -34,6 +35,8 @@ dependencies {
     implementation(libs.exposed.jdbc)
     implementation(libs.exposed.java.time)
     implementation(libs.exposed.json)
+    implementation("io.ktor:ktor-server-swagger:3.6.0")
+    implementation("io.ktor:ktor-server-routing-openapi:3.6.0")
 
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)
