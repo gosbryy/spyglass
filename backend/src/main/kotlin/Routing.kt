@@ -16,6 +16,7 @@ import io.ktor.utils.io.readBuffer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.io.readByteArray
+import org.jetbrains.exposed.v1.exceptions.ExposedSQLException
 import org.jetbrains.exposed.v1.jdbc.insertReturning
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
@@ -127,26 +128,34 @@ fun Application.configureRouting() {
                 throw InvalidEmailException("Invalid email domain")
             }
             val hashedPassword = hashPassword(request.password)
+            val user = try {
+                withContext(Dispatchers.IO) {
+                    transaction {
+                        val row = Users.insertReturning(
+                            returning = listOf(Users.id, Users.username, Users.email, Users.createdAt),
+                        ) { insert ->
+                            insert[Users.username] = request.username
+                            insert[Users.email] = email
+                            insert[Users.passwordHash] = hashedPassword
+                        }.single()
 
-            val user = withContext(Dispatchers.IO) {
-                transaction {
-                    val row = Users.insertReturning(
-                        returning = listOf(Users.id, Users.username, Users.email, Users.createdAt),
-                    ) { insert ->
-                        insert[Users.username] = request.username
-                        insert[Users.email] = email
-                        insert[Users.passwordHash] = hashedPassword
-                    }.single()
-
-                    UserResponse(
-                        id = row[Users.id],
-                        username = row[Users.username],
-                        email = row[Users.email],
-                        createdAt = row[Users.createdAt].toString(),
-                    )
+                        UserResponse(
+                            id = row[Users.id],
+                            username = row[Users.username],
+                            email = row[Users.email],
+                            createdAt = row[Users.createdAt].toString(),
+                        )
+                    }
                 }
-            }
+            } catch (e: ExposedSQLException) {
+                if (e.sqlState != "23505") throw e
 
+                call.respond(
+                    HttpStatusCode.Conflict,
+                    ErrorResponse("USER_ALREADY_EXISTS", "Username or email is already taken"),
+                )
+                return@post
+            }
             call.respond(HttpStatusCode.Created, user)
         }
     }
